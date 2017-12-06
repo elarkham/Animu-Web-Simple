@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC>
+<html lang="en">
+<head>
+  <title>Animu</title>
+  <meta charset="utf-8">
+  <link rel="icon" href="/favicon.png" >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- CSS -->
+  <link href="/css/main.css" rel="stylesheet">
+  <link href="/css/video/video-js.css" rel="stylesheet">
+  <link href="/css/video/videojs-animu-skin.css" rel="stylesheet">
+  <!-- Javascript Libraries -->
+  <script src="/js/animu.js"></script>
+  <script src="/js/ass/subtitles-octopus.js"></script>
+  <script src="/js/video.js"></script>
+  <!-- Javascript -->
+  <script>
+    // Make sure token is present
+    if(!localStorage.getItem("token")){
+      location.assign("/login.html");
+    }
+    const token = localStorage.getItem("token");
+
+    // Get id from query string
+    const params = new URLSearchParams(document.location.search.substring(1));
+    if(!params.has("id")) {
+      location.assign("/index.html");
+    }
+    const id = params.get("id");
+    console.log("Episode id: " + id);
+
+    const assPlugin = function(options) {
+      if(!SubtitlesOctopus){
+        return;
+      }
+      const player  = this;
+
+      // Configure ASS renderer
+      const assOptions = {
+        video: player.tech_.el_,
+        subUrl: options.subUrl,
+        fonts: options.fonts,
+        workerUrl: '/js/ass/subtitles-octopus-worker.js',
+      };
+      player.octopusInstance = new SubtitlesOctopus(assOptions);
+    }
+    videojs.plugin('assPlugin', assPlugin);
+
+    // Application Ready
+    document.addEventListener("DOMContentLoaded", function(e) {
+      const video = document.getElementById("video");
+      const player = videojs(video, {
+        controls: true,
+        fluid: true,
+        controlBar: {
+          volumeMenuButton: {
+            inline: false
+          },
+          subtitlesButton: {
+            default: true
+          },
+          children: [
+            'playToggle',
+            'currentTimeDisplay',
+            'timeDivider',
+            'durationDisplay',
+            'progressControl',
+            'liveDisplay',
+            'remainingTimeDisplay',
+            'customControlsSpacer',
+            'chaptersButton',
+            'subtitlesButton',
+            'captionsButton',
+            'volumeMenuButton',
+            'fullscreenToggle'
+          ]
+        }
+      });
+
+      animu.get_episode(id, function(json) {
+        const ep = json.episode;
+        const title = document.getElementById("episode_title");
+
+        // Series
+        const assets = "/assets/"
+        const series_dir = assets + ep.series.directory + "/";
+
+        // Video
+        const video_dir = series_dir + ep.video.dir + "/";
+        const video_file = video_dir + ep.video.filename;
+        console.log("Video File: " + video_file);
+
+        // Subtitles
+        const subtitles = ep.video.subtitles;
+        if(subtitles !== null) {
+          const sub_dir = subtitles.dir + "/";
+          const sub_file = series_dir + sub_dir + subtitles.filename;
+
+          // Fonts
+          const font_dir = "/" + subtitles.font_dir + "/";
+          const fonts = subtitles.fonts.map((f) => series_dir + font_dir + f);
+
+          //SubtitlesOctopus
+          player.assPlugin({
+            subUrl: sub_file,
+            fonts: fonts,
+            language: "Japanese",
+            label: "Japanese",
+          });
+        }
+
+        // Apply to DOM
+        //title.textContent = ep.title;
+        player.src({src: video_file});
+      });
+
+      player.ready(function () {
+        console.log(player);
+      });
+
+    });
+  </script>
+</head>
+<body>
+  <h1 id="episode_title"></h1>
+  <section id="video-container">
+    <div id="video-content">
+    <video id="video"
+           class="video-js vjs-animu-skin vjs-big-play-centered vjs-16-9">
+    </video>
+    </div>
+  </section>
+</body>
+</html>

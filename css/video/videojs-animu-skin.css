@@ -1,0 +1,65 @@
+.video-js {
+    /* The base font size controls the size of everything, not just text.
+       All dimensions use em-based sizes so that the scale along with the font size.
+       Try increasing it to 15px and see what happens. */
+    font-size: 10px;
+    /* The main font color changes the ICON COLORS as well as the text */
+    color: #fff;
+}
+
+/* The "Big Play Button" is the play button that shows before the video plays.
+   To center it set the align values to center and middle. The typical location
+   of the button is the center, but there is trend towards moving it to a corner
+   where it gets out of the way of valuable content in the poster image.*/
+.vjs-animu-skin .vjs-big-play-button {
+    /* The font size is what makes the big play button...big.
+       All width/height values use ems, which are a multiple of the font size.
+       If the .video-js font-size is 10px, then 3em equals 30px.*/
+    font-size: 8em;
+    /* We're using SCSS vars here because the values are used in multiple places.
+       Now that font size is set, the following em values will be a multiple of the
+       new font size. If the font-size is 3em (30px), then setting any of
+       the following values to 3em would equal 30px. 3 * font-size. */
+    /* 1.5em = 45px default */
+    line-height: 1.5em;
+    height: 1.5em;
+    width: 3em;
+    /* 0.06666em = 2px default */
+    border: 0;
+    /* 0.3em = 9px default */
+    border-radius: 0.3em;
+    /* Align center */
+    left: 50%;
+    top: 50%;
+    margin-left: -1.5em;
+    margin-top: -0.75em;
+    background-color: transparent;
+}
+
+.vjs-animu-skin:hover .vjs-big-play-button {
+    background-color: transparent;
+}
+
+.vjs-animu-skin .vjs-poster {
+    outline: none; /* Remove Blue Outline on Click*/
+    outline: 0;
+}
+
+.vjs-animu-skin .vjs-control-bar,
+.vjs-animu-skin .vjs-volume-menu-button .vjs-menu-content,
+.vjs-animu-skin .vjs-volume-panel .vjs-volume-control {
+    background-color: #000c;
+}
+
+.vjs-animu-skin .vjs-volume-level,
+.vjs-animu-skin .vjs-play-progress {
+    background-color: #3F51B5;
+}
+
+/* Remove circle from slider bars */
+.vjs-animu-skin .vjs-mouse-display:before,
+.vjs-animu-skin .vjs-play-progress:before,
+.vjs-animu-skin .vjs-volume-level:before {
+    content: '';
+}
+

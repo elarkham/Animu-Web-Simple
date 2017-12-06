@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Animu</title>
+  <link rel="icon" href="/favicon.png" >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Fonts -->
+   <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,900|Open+Sans:400,600|Rubik" rel="stylesheet">
+  <!-- CSS -->
+  <link href="/css/main.css" rel="stylesheet">
+  <!-- Javascript -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function(e) {
+      var login = document.getElementById('login-form');
+      var username = document.getElementById('username');
+      var password = document.getElementById('password');
+      var login_msg  = document.getElementById('login-msg');
+      var login_resp = document.getElementById('login-response');
+
+      login.onsubmit = function(e) {
+        // Disable Default Action
+        e.preventDefault();
+
+        // Gather Form Data
+        const form_data = {
+          "session": {
+            "username": username.value,
+            "password": password.value
+          }
+        };
+        console.log(form_data);
+
+        // Submit Data
+        const opts = {
+          method: "POST",
+          body: JSON.stringify(form_data),
+          headers:
+            { 'Accept': 'application/json',
+              'Content-Type': 'application/json; charset=UTF-8'
+            },
+        };
+
+        fetch("/api/v1/session", opts)
+          .then(function(resp) {
+            if(resp.ok) {
+              return resp.json();
+            } else {
+              login_msg.innerHTML = "Incorrect Username or Password";
+              login_resp.classList.add("enabled");
+            }
+          })
+          .then(function(json) {
+            let token = json.jwt;
+            localStorage.setItem('token', token);
+            location.assign("/animu-web/index.html");
+            //login_msg.innerHTML = token;
+          });
+      };
+
+    });
+  </script>
+</head>
+
+<body>
+  <main id="login">
+    <form id="login-form">
+      <h2>Login</h2>
+
+      <section id="login-input">
+        <label for="username"> Username </label>
+        <input name="username" id="username" type="text" value=""></input>
+        <label for="password"> Password </label>
+        <input name="password" id="password" type="password" value=""></input>
+      </section>
+
+      <section id="login-buttons">
+        <button disabled>Register</button>
+        <button type="login-submit">Submit</button>
+      </section>
+
+      <section id="login-response">
+        <p id="login-msg"></p>
+      </section>
+    </form>
+  </main>
+</body>
+</html>

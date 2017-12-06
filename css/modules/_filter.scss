@@ -1,0 +1,19 @@
+// - - - - - - - - - - - - - - - - - - -
+// - - filter module
+// styles for the filter module
+
+.filter {
+  display: grid;
+  grid-template-columns: 1fr 130px;
+  grid-column-gap: 5px;
+  width: 100%;
+
+  .filter-bar {
+  }
+  .filter-sort {
+    font: {
+      family: "Rubik", sans-serif;
+      size: 0.84em;
+    }
+  }
+}

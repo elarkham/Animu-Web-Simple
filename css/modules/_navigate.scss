@@ -1,0 +1,32 @@
+// - - - - - - - - - - - - - - - - - - -
+// - - navigate module
+// styles for the navigate module
+
+.navigate {
+  display: grid;
+  grid-template-columns: auto auto auto;
+
+  height: 100%;
+  width: 100%;
+
+  > a {
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover{
+      background: lighten($black, 10%);
+    }
+
+    > h3 {
+      font: {
+        size: 1.0em;
+        family: "Rubik", sans-serif;
+        weight: 400;
+      }
+      color: $grey;
+    }
+  }
+}

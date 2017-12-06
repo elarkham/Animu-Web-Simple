@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+find -name '*.scss' | wendy -m 8 make -B
