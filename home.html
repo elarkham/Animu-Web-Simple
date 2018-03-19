@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Animu</title>
+  <meta charset="utf-8">
+  <link rel="icon" href="/favicon.png" >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,900|Open+Sans:400,600|Rubik" rel="stylesheet">
+  <!-- CSS -->
+  <link href="/css/main.css" rel="stylesheet">
+  <!-- Javascript Libraries -->
+  <script src="/js/animu.js"></script>
+  <!-- Templates -->
+  <template id="card_template">
+    <div class="poster-card">
+      <a>
+        <img class="image-field"></img>
+      </a>
+    </div>
+  </template>
+  <!-- Javascript -->
+  <script>
+    // Make sure token is present
+    if(!localStorage.getItem("token")){
+      location.assign("/login.html");
+    }
+    const token = localStorage.getItem("token");
+
+    // Series Meta Info
+    const t = document.getElementById("card_template");
+
+    // Fragment promise, allows posters to render before DOM is ready
+    let frag_p = new Promise((resolve, reject) => {
+
+      // Document fragment for faster DOM mutations
+      const frag = document.createDocumentFragment();
+
+      // Render Series
+      animu.all_series({'order_by':'started_airing_date'}, function(json) {
+        const series = json.series;
+        console.log(series);
+
+        // Populate Episode Table
+        series.forEach((show) => {
+          const clone = document.importNode(t.content, true);
+          const link = clone.querySelector("a");
+          const img  = clone.querySelector(".image-field");
+
+          // Set Poster Image
+          const img_src =
+              "/assets/"
+              + show.directory + "/"
+              + show.poster_image.small;
+
+          img.setAttribute("src", img_src);
+          img.setAttribute("alt", show.canon_title);
+
+          // Set Link Address
+          const uri  = '/show.html?id=' + show.id;
+          link.href = uri;
+
+          // Add new card to document fragment
+          frag.appendChild(clone);
+        });
+
+        // Reverse order of children
+        var i = frag.childNodes.length;
+        while(i--) {
+          frag.appendChild(frag.childNodes[i]);
+        }
+
+        // Resolve Promise
+        resolve(frag);
+      });
+    });
+    // DOM Ready
+    document.addEventListener("DOMContentLoaded", async function(e) {
+      const card_list = document.getElementById('card_list');
+
+      // Wait for fragment to finish building
+      frag_p.then(function(f) {
+        card_list.appendChild(f);
+      });
+    });
+  </script>
+</head>
+<body>
+  <section id="header">
+    <div class="l-header-left">
+      <h1 class="logo">ANIMU</h1>
+      <nav class="navigate">
+        <a><h3>Seasonal</h3></a>
+        <a><h3>Archive</h3></a>
+        <a><h3>Queue</h3></a>
+      </nav>
+    </div>
+    <div class="l-header-right">
+      <!--
+      <div class="filter">
+        <select name="Sort By" class="filter-sort">
+          <option value="canon_title">Title</option>
+          <option value="inserted_at">Date Added</option>
+        </select>
+        <input type="search" class="filter-bar"></input>
+      </div>
+      -->
+    </div>
+  </section>
+  <section id="card_list">
+  </section>
+</body>
+</html>
