@@ -6,7 +6,7 @@
   <link rel="icon" href="/favicon.png" >
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Fonts -->
-   <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,900|Open+Sans:400,600|Rubik" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,900|Open+Sans:400,600|Rubik" rel="stylesheet">
   <!-- CSS -->
   <link href="/css/main.css" rel="stylesheet">
   <!-- Javascript Libraries -->
@@ -49,9 +49,9 @@
 
         // Set Poster Image
         const img_src =
-            "http://animu.org/assets/"
+            "/assets/"
             + series.directory + "/"
-            + series.poster_image.original;
+            + series.poster_image.large;
 
         series_img.setAttribute("src", img_src);
         series_img.setAttribute("alt", series.canon_title);
